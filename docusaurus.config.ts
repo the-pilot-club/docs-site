@@ -190,7 +190,7 @@ const config: import('@docusaurus/types').Config = {
                         ],
                     },
                 ],
-                copyright: `Copyright © ${new Date().getFullYear()} The Pilot Club`,
+                copyright: `Copyright © ${new Date().getFullYear()} The Pilot Club Inc.`,
             },
             prism: {
                 theme: lightCodeTheme,
