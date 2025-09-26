@@ -52,6 +52,16 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/ListSectorsResponse'
+  /users/birthdays:
+    get:
+      tags:
+        - Users
+      summary: Get Users Birthdays
+      description: Get a list of users who's birthday are today
+      operationId: birthdays
+      responses:
+        '200':
+          $ref: '#/components/responses/UsersBirthdays'
   /users/get:
     get:
       tags:
@@ -154,6 +164,37 @@ paths:
       tags:
         - Audit Logs
       summary: Submit a audit log entry for a member
+      deprecated: true
+      description: Adds an audit log entry for a member
+      operationId: addUserAuditLog
+      parameters:
+        - name: discord_id
+          in: path
+          description: Discord ID of User
+          required: true
+          schema:
+            type: string
+            example: 968312697403871232
+      requestBody:
+        description: Request Body for submitting an Audit Log for a member.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuditLog"
+      security:
+        - APIKey: [ ]
+      responses:
+        '202':
+          $ref: '#/components/responses/AuditLogResponse'
+        '401':
+          $ref: '#/components/responses/UnauthedResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+  /users/audit-logs/new:
+    post:
+      tags:
+        - Audit Logs
+      summary: Submit a audit log entry for a member
       description: Adds an audit log entry for a member
       operationId: addUserAuditLog
       parameters:
@@ -186,6 +227,12 @@ components:
       description: Bearer Token
       scheme: bearer
   responses:
+    UsersBirthdays:
+      description: An array of discord ID's
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Birthdays'
     NotFoundResponse:
       description: Resource Not Found
       content:
@@ -277,6 +324,10 @@ components:
           schema:
             $ref: '#/components/schemas/AlreadyInFCP'
   schemas:
+    Birthdays:
+      type: array
+      description: Array of Discord Ids
+      example: ['968312697403871232', '968312697403871231']
     NotFound:
       type: object
       description: Not Found
