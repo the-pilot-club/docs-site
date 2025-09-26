@@ -34,6 +34,7 @@ const config: import('@docusaurus/types').Config = {
             (
                 {
                     docs: {
+                        routeBasePath: '/',
                         sidebarPath: require.resolve('./sidebars.js'),
                         editUrl:
                             'https://github.com/the-pilot-club/docs-site.git/tree/main',
@@ -111,12 +112,13 @@ const config: import('@docusaurus/types').Config = {
                     {
                         to: 'releases',
                         label: 'Releases',
-                        position: 'left'},
+                        position: 'left'
+                    },
                     {
                         type: 'dropdown',
                         items: [
                             {
-                                to: '/docs/services/apis',
+                                to: '/services/apis',
                                 label: 'Overview',
                             },
                             ...navbarDropdown,

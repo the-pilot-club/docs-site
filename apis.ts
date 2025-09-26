@@ -7,7 +7,7 @@
  * The first version in the list is the default version.
  */
 const apis = {
-    connect: {
+    fcp: {
         slug: 'fcp-api',
         title: 'Flight Crew Portal API',
         versions: [
@@ -18,15 +18,20 @@ const apis = {
             },
         ],
     },
-    internal_api: {
-        slug: 'internal-api',
-        title: 'Discord Bot API',
+    core_api: {
+        slug: 'core-api',
+        title: 'Core API',
         versions: [
             {
                 version: '1.0.0',
                 label: 'v1',
-                spec: 'openapi/api.yaml',
+                spec: 'openapi/api-v1.yaml',
             },
+            {
+                version: '2.0.0',
+                label: 'v2',
+                spec: 'openapi/api-v2.yaml',
+            }
         ],
     }
 };
@@ -48,7 +53,7 @@ const toPluginConfig = () => {
                 specPath: version.spec,
                 outputDir: `docs/api/${api.slug}/${version.version}`,
                 label: version.label,
-                baseUrl: `docs/api/${api.slug}/${version.version}`,
+                baseUrl: `/api/${api.slug}/${version.version}`,
             };
         }
 
@@ -61,7 +66,7 @@ const toPluginConfig = () => {
             },
             version: api.versions[0].version,
             label: api.versions[0].label,
-            baseUrl: `docs/api/${api.slug}`,
+            baseUrl: `/api/${api.slug}`,
             versions,
         };
     }
@@ -131,7 +136,7 @@ const toSidebarsConfig = () => {
 }
 
 const navbarDropdown = Object.values(apis).map((api) => ({
-    to: `docs/api/${api.slug}`,
+    to: `/api/${api.slug}`,
     label: api.title,
 }));
 

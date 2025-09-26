@@ -55,6 +55,7 @@ export default function HomepageFeatures() {
       <div className="container">
         <div className="row">
           {FeatureList.map((props, idx) => (
+              // @ts-ignore
             <Feature key={idx} {...props} />
           ))}
         </div>

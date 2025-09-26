@@ -196,7 +196,7 @@ paths:
         - Audit Logs
       summary: Submit a audit log entry for a member
       description: Adds an audit log entry for a member
-      operationId: addUserAuditLog
+      operationId: addUserAuditLogNew
       parameters:
         - name: discord_id
           in: path

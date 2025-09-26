@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "npm run re-gen && docusaurus start",
-    "build": "npm run re-gen && docusaurus build",
+    "dev": "npm run clear && npm run start",
+    "start": "npm run gen-all-api-docs && docusaurus start",
+    "build": "npm run gen-all-api-docs && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "npm run clean-all-api-docs && docusaurus clear",
@@ -16,9 +17,8 @@
     "clean-api-docs": "docusaurus clean-api-docs",
     "gen-api-docs:version": "docusaurus gen-api-docs:version",
     "clean-api-docs:version": "docusaurus clean-api-docs:version",
-    "gen-all-api-docs": "docusaurus gen-api-docs all",
-    "clean-all-api-docs": "docusaurus clean-api-docs all",
-    "re-gen": "npm run clean-all-api-docs && npm run gen-all-api-docs"
+    "gen-all-api-docs": "docusaurus gen-api-docs all && docusaurus gen-api-docs:version core_api:all",
+    "clean-all-api-docs": "docusaurus clean-api-docs all && docusaurus clean-api-docs:version core_api:all"
   },
   "dependencies": {
     "@docusaurus/core": "^3.6.1",

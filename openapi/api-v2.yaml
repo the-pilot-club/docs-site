@@ -1,17 +1,18 @@
 openapi: 3.0.3
 info:
   title: The Pilot Club Discord-Bot API
-  version: 1.0.0
+  version: 2.0.0
   termsOfService: https://www.thepilotclub.org/legal#TOS
   contact:
     email: webdev@thepilotcblub.org
     name: The Pilot Club Web Development Team
 servers:
-  - url: https://api.thepilotclub.org/api
+  - url: https://api.thepilotclub.org
     description: Production
 paths:
   /quiz/current:
     get:
+      deprecated: true
       tags:
         - Quiz
       summary: Get Current Question
@@ -22,6 +23,7 @@ paths:
           $ref: '#/components/responses/QuizResponse'
   /quiz/next:
     get:
+      deprecated: true
       tags:
         - Quiz
       summary: Get Next Question
@@ -34,6 +36,7 @@ paths:
           $ref: '#/components/responses/QuizResponse'
   /quiz/random:
     get:
+      deprecated: true
       tags:
         - Quiz
       summary: Get Random Question
@@ -44,6 +47,7 @@ paths:
           $ref: '#/components/responses/QuizResponse'
   /quiz/all:
     get:
+      deprecated: true
       tags:
         - Quiz
       summary: Get All Questions
@@ -58,6 +62,7 @@ paths:
           $ref: '#/components/responses/UnauthedResponse'
   /quiz/{id}:
     get:
+      deprecated: true
       tags:
         - Quiz
       summary: Get Question By ID
@@ -73,6 +78,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFoundResponse'
     patch:
+      deprecated: true
       tags:
         - Quiz
       summary: Get Question By ID
@@ -104,6 +110,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFoundResponse'
     delete:
+      deprecated: true
       tags:
         - Quiz
       summary: Delete Question By ID
