@@ -4,8 +4,8 @@ info:
   version: 1.0.0
   termsOfService: https://www.thepilotclub.org/legal#TOS
   contact:
-    email: webdev@thepilotcblub.org
-    name: The Pilot Club Web Development Team
+    email: tect@thepilotcblub.org
+    name: TPC Tech Team
 servers:
   - url: https://flightcrew.thepilotclub.org/api
     description: Production
@@ -77,8 +77,7 @@ paths:
       tags:
         - Users
       summary: Get Users Details
-      description: "Returns TPC FCP User Details. 
-      The Following Fields are restricted to authenticated users only: \n\n - id\n- first_name\n- last_name\n- email\n- status"
+      description: "Returns TPC FCP User Details. The Following Fields are restricted to authenticated users only: \n\n - id\n- first_name\n- last_name\n- email\n- status"
       operationId: getUserDetails
       parameters:
         - name: discord_id

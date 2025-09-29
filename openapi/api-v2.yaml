@@ -1,247 +1,665 @@
-openapi: 3.0.3
+openapi: 3.1.1
 info:
-  title: The Pilot Club Discord-Bot API
-  version: 2.0.0
-  termsOfService: https://www.thepilotclub.org/legal#TOS
+  title: The Pilot Club Core API v2
+  version: 3.0.1
+  termsOfService: 'https://www.thepilotclub.org/legal#TOS'
   contact:
-    email: webdev@thepilotcblub.org
-    name: The Pilot Club Web Development Team
+    email: tech@thepilotclub.org
+    name: TPC Tech Team
 servers:
-  - url: https://api.thepilotclub.org
+  - url: 'https://api.thepilotclub.org'
     description: Production
 paths:
-  /quiz/current:
-    get:
-      deprecated: true
-      tags:
-        - Quiz
-      summary: Get Current Question
-      description: This returns the data for the current question
-      operationId: findCurrent
+  '/{id}':
+    delete:
+      operationId: AppController_removeUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
       responses:
         '200':
-          $ref: '#/components/responses/QuizResponse'
-  /quiz/next:
-    get:
-      deprecated: true
+          description: Removes a User from all tables
+          content:
+            application/json:
+              example:
+                - removedFrom:
+                    leaderboard: true
+                    quiz: true
       tags:
-        - Quiz
-      summary: Get Next Question
-      description: This returns the data for the next days question
-      operationId: findNext
-      security:
-        - APIKey: [ ]
-      responses:
-        '200':
-          $ref: '#/components/responses/QuizResponse'
-  /quiz/random:
-    get:
-      deprecated: true
-      tags:
-        - Quiz
-      summary: Get Random Question
-      description: This returns a random question.
-      operationId: getRandom
-      responses:
-        '200':
-          $ref: '#/components/responses/QuizResponse'
+        - Users
   /quiz/all:
     get:
-      deprecated: true
-      tags:
-        - Quiz
-      summary: Get All Questions
-      description: This returns and array of all the questions in the database.
-      operationId: getAll
-      security:
-        - APIKey: [ ]
+      operationId: QuizController_findAll
       responses:
         '200':
-          $ref: '#/components/responses/QuizResource'
-        '401':
-          $ref: '#/components/responses/UnauthedResponse'
-  /quiz/{id}:
+          description: 'Gets a list of all questions in the database'
+          $ref: '#/components/responses/QuizAllResponse'
+      tags:
+        - Quiz
+  /quiz/current:
     get:
-      deprecated: true
-      tags:
-        - Quiz
-      summary: Get Question By ID
-      description: This returns the data for the queried question.
-      operationId: getQuestionById
-      security:
-        - APIKey: [ ]
+      operationId: QuizController_getCurrent
       responses:
         '200':
-          $ref: '#/components/responses/QuizResponse'
-        '401':
-          $ref: '#/components/responses/UnauthedResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-    patch:
-      deprecated: true
+          description: 'gets the current question in the queue for the quiz'
+          $ref: '#/components/responses/GetQuizResponse'
       tags:
         - Quiz
-      summary: Get Question By ID
-      description: This returns the data for the queried question.
-      operationId: UpdateQuestion
-      security:
-        - APIKey: [ ]
+  /quiz/next:
+    get:
+      operationId: QuizController_getNext
+      responses:
+        '200':
+          description: 'Get the next question in the queue for the quiz'
+          $ref: '#/components/responses/GetQuizResponse'
+      tags:
+        - Quiz
+  /quiz/new:
+    post:
+      operationId: QuizController_newQuestion
+      parameters: [ ]
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Quiz'
+              $ref: '#/components/schemas/QuizDto'
       responses:
-        '200':
-          description: Successful Operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  Success:
-                    type: string
-                    description: Success Message
-                    example: Question Updated
-                  Question:
-                    $ref: '#/components/schemas/Quiz'
-        '401':
-          $ref: '#/components/responses/UnauthedResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
-    delete:
-      deprecated: true
+        '201':
+          description: 'The standard output of the api creation. The generated maps section of the response is other properties within the same table that are used during the creation of your request.'
+          $ref: '#/components/responses/NewQuizResponse'
       tags:
         - Quiz
-      summary: Delete Question By ID
-      description: This Deletes a question from our database.
-      operationId: deleteQuestion
-      security:
-        - APIKey: [ ]
+  '/quiz/{id}':
+    get:
+      operationId: QuizController_getOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
       responses:
         '200':
-          description: Successful Operation
+          description: ''
+          $ref: '#/components/responses/GetQuizResponseFull'
+      tags:
+        - Quiz
+    put:
+      operationId: QuizController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizDtoAll'
+      responses:
+        '200':
+          description: ''
+          $ref: '#/components/responses/NewQuizResponse'
+
+      tags:
+        - Quiz
+    delete:
+      operationId: QuizController_deleteOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Some data may not be present during the deletion process'
+          $ref: '#/components/responses/NewQuizResponse'
+      tags:
+        - Quiz
+  /suggestions/all:
+    get:
+      operationId: SuggestionsController_findAll
+      parameters: [ ]
+      responses:
+        '200':
+          description: ''
+          $ref: '#/components/responses/SuggestionsAllResponse'
+      tags:
+        - Suggestions
+  '/suggestions/{id}':
+    get:
+      operationId: SuggestionsController_getSuggestionById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          $ref: '#/components/responses/SuggestionsResponse'
+      tags:
+        - Suggestions
+    patch:
+      operationId: SuggestionsController_updateSuggestion
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSuggestionDto'
+      responses:
+        '200':
+          description: ''
+          $ref: '#/components/responses/SuggestionsResponse'
+      tags:
+        - Suggestions
+    delete:
+      operationId: SuggestionsController_deleteOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'Some data may not be present during the deletion process'
+          $ref: '#/components/responses/SuggestionsDeleteResponse'
+      tags:
+        - Suggestions
+  /suggestions/new:
+    post:
+      operationId: SuggestionsController_createSuggestion
+      parameters: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSuggestionDto'
+      responses:
+        '201':
+          description: ''
+          $ref: '#/components/responses/SuggestionsResponse'
+      tags:
+        - Suggestions
+  /discord/logs/new:
+    post:
+      operationId: BotlogsController_addLogs
+      summary: creates a new log
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLogsDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - BotLogs
+  /discord/logs/all:
+    get:
+      operationId: BotlogsController_getLogs
+      responses:
+        '200':
+          description: List of all logs
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Success:
-                    type: string
-                    description: Success Message
-                    example: Question Updated
-        '401':
-          $ref: '#/components/responses/UnauthedResponse'
-        '404':
-          $ref: '#/components/responses/NotFoundResponse'
+                $ref: '#/components/schemas/Logs'
+      tags:
+        - BotLogs
+  /discord/sticky/find:
+    get:
+      operationId: StickyController_findSticky
+      parameters: [ ]
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Sticky
+  /discord/sticky/new:
+    post:
+      operationId: StickyController_addSticky
+      parameters: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStickyDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Sticky
+  /discord/sticky/delete:
+    delete:
+      operationId: StickyController_removeSticky
+      parameters: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStickyDto'
+      responses:
+        '204':
+          description: ''
+      tags:
+        - Sticky
+  '/discord/leaderboard/users/find/{id}':
+    get:
+      operationId: LeaderboardController_findUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Leaderboard
+  /discord/leaderboard/users/create:
+    post:
+      operationId: LeaderboardController_createUser
+      parameters: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - Leaderboard
+  '/discord/leaderboard/users/{id}':
+    patch:
+      operationId: LeaderboardController_updateUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Leaderboard
+  /quiz/responses/user/record:
+    post:
+      operationId: QuizResponsesController_setUserResponse
+      parameters: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserResponseDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - QuizResponses
+  '/quiz/responses/user/check/{id}':
+    get:
+      operationId: QuizResponsesController_getCheck
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - QuizResponses
+  '/quiz/responses/user/responses/{id}':
+    get:
+      operationId: QuizResponsesController_getUserResponse
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: answer
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - QuizResponses
+  /quiz/responses/question/all:
+    get:
+      operationId: QuizResponsesController_getQuestion
+      parameters: [ ]
+      responses:
+        '200':
+          description: ''
+      tags:
+        - QuizResponses
+  /quiz/responses/question/set:
+    post:
+      operationId: QuizResponsesController_setQuestion
+      parameters: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetQuestionDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - QuizResponses
+  '/quiz/responses/question/{id}':
+    delete:
+      operationId: QuizResponsesController_deleteQuestion
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - QuizResponses
 components:
-  securitySchemes:
-    APIKey:
-      type: http
-      description: Bearer Token
-      scheme: bearer
   responses:
-    NotFoundResponse:
-      description: Resource Not Found
+    QuizAllResponse:
+      description: All Quiz Questions
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/NotFound'
-    UnauthedResponse:
-      description: Not Authorized
+            type: array
+            items:
+              $ref: '#/components/schemas/QuizDtoAll'
+    GetQuizResponse:
+      description: Get quiz from ID
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Unauthed'
-
-    QuizResponse:
-      description: Quiz Question
+            $ref: '#/components/schemas/QuizDto'
+    GetQuizResponseFull:
+      description: Get quiz from ID
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Quiz'
-    QuizResource:
-      description: Quiz Question Full
+            $ref: '#/components/schemas/QuizDtoFull'
+    NewQuizResponse:
+      description: New Quiz Response
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/QuizFull'
+            $ref: '#/components/schemas/StandardOutput'
+    SuggestionsAllResponse:
+      description: Suggestion Response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/SuggestionDto'
+    SuggestionsResponse:
+      description: Suggestion Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SuggestionDto'
+    SuggestionsDeleteResponse:
+      description: Suggestion Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/StandardOutput'
   schemas:
-    NotFound:
-      type: object
-      description: Not Found
+    StandardOutput:
+      type: opject
       properties:
-        detail:
-          type: string
-          description: Object Not being found
-          example: Not Found
-    Unauthed:
+        identifiers:
+          type: object
+          properties:
+            id:
+              type: string
+              example: ece6de76-523f-46fe-8e8b-3b07b7a7c1f9
+        generatedMaps:
+          type: array
+          items:
+            additionalProperties:
+              type: string
+        raw:
+          type: object
+          properties:
+            fieldCount:
+              type: number
+              example: 1
+            affectedRows:
+              type: number
+              example: 1
+            insertId:
+              type: number
+              example: 0
+            info:
+              type: string
+              example:
+            serverStatus:
+              type: number
+              example: 2
+            warningStatus:
+              type: number
+              example: 0
+            changedRows:
+              type: number
+              example: 1
+    QuizDtoAll:
       type: object
-      description: Not Authorized
-      properties:
-        message:
-          type: string
-          description: Resource has not been authenticated
-          example: Unauthenticated
-    Quiz:
-      type: object
-      description: FBO Details
       properties:
         question:
           type: string
-          description: question
-          example: What kind of cheese does Eric Like?
+          example: How did you find me?
         optionA:
           type: string
-          description: option a
-          example: Swiss
+          example: I looked at the documentation.
         optionB:
           type: string
-          description: option b
-          example: Cheddar
+          example: I skimmed through the documentation.
         optionC:
           type: string
-          description: option c
-          example: Colby Jack
+          example: I did not look at the documentation
         correctAnswer:
           type: string
-          description: the correct answer
-          example: B
-    QuizFull:
+          example: A
+        answerDescription:
+          type: string
+          example: You got this answer because you looked through the documentation.
+    QuizDto:
       type: object
-      description: FBO Details
       properties:
         id:
           type: string
-          description: id of the question
-          example: 0e0873db-2ba5-4b29-a400-5177f8d2918f
+          example: 09f153a4-e95f-453a-b682-a4c8d1420671
         question:
           type: string
-          description: question
-          example: What kind of cheese does Eric Like?
+          example: How did you find me?
         optionA:
           type: string
-          description: option a
-          example: Swiss
+          example: I looked at the documentation.
         optionB:
           type: string
-          description: option b
-          example: Cheddar
+          example: I skimmed through the documentation.
         optionC:
           type: string
-          description: option c
-          example: Colby Jack
+          example: I did not look at the documentation
         correctAnswer:
           type: string
-          description: the correct answer
-          example: B
+          example: A
+        answerDescription:
+          type: string
+          example: You got this answer because you looked through the documentation.
+    QuizDtoFull:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 09f153a4-e95f-453a-b682-a4c8d1420671
+        question:
+          type: string
+          example: How did you find me?
+        optionA:
+          type: string
+          example: I looked at the documentation.
+        optionB:
+          type: string
+          example: I skimmed through the documentation.
+        optionC:
+          type: string
+          example: I did not look at the documentation
+        correctAnswer:
+          type: string
+          example: A
         isActive:
+          type: boolean
+          example: false
+        isOld:
+          type: boolean
+          example: true
+        answerDescription:
+          type: string
+          example: You got this answer because you looked through the documentation.
+    SuggestionDto:
+      type: object
+      properties:
+        id:
           type: number
-          description: is the question active
-          example: 0
-
+          example: 1
+        statusId:
+          type: number
+          example: 3
+        discordId:
+          type: string
+          example: 1299073492116967516
+        ideaText:
+          type: string
+          example: Make TPC great again!
+        reason:
+          type: string
+          example: no because its already great!
+        messageId:
+          type: string
+          example: 1299073492116967516
+        channelId:
+          type: string
+          example: 1299073492116967516
+        actionUserId:
+          type: string
+          example: 1299073492116967516
+    CreateSuggestionDto:
+      type: object
+      properties:
+        statusId:
+          type: number
+          example: 1
+        discordId:
+          type: string
+          example: 1299073492116967516
+        ideaText:
+          type: string
+          example: Can we make eric not hate writing documentation by having someone else do it?
+    UpdateSuggestionDto:
+      type: object
+      properties:
+        reason:
+          type: string
+          example: no because its already great!
+        messageId:
+          type: string
+          example: 1299073492116967516
+        channelId:
+          type: string
+          example: 1299073492116967516
+        actionUserId:
+          type: string
+          example: 1299073492116967516
+        statusId:
+          type: number
+          example: 3
+    CreateLogsDto:
+      type: object
+      properties:
+        type:
+          type: number
+          example: 1
+        slug:
+          type: string
+          example: Sync Command
+      required:
+        - type
+        - slug
+    Logs:
+      type: object
+      properties:
+        type:
+          type: number
+          example: 1
+          description: Type Of Log Submitted
+        slug:
+          type: string
+          example: Sync Command
+          description: Summary of command/ message used
+      required:
+        - id
+        - type
+        - slug
+    CreateStickyDto:
+      type: object
+      properties: { }
+    CreateUserDto:
+      type: object
+      properties: { }
+    UpdateUserDto:
+      type: object
+      properties: { }
+    UserResponseDto:
+      type: object
+      properties: { }
+    SetQuestionDto:
+      type: object
+      properties: { }
+    ApiKeyDto:
+      type: object
+      properties: { }

@@ -1,11 +1,12 @@
 openapi: 3.0.3
 info:
   title: The Pilot Club Discord-Bot API
-  version: 1.0.0
+  version: 2.0.0
   termsOfService: https://www.thepilotclub.org/legal#TOS
+  description: "This API is no longer active and no endpoints will work. Please use v2 endpoints"
   contact:
-    email: webdev@thepilotcblub.org
-    name: The Pilot Club Web Development Team
+    email: tech@thepilotcblub.org
+    name: TPC Tech Team
 servers:
   - url: https://api.thepilotclub.org/api
     description: Production
