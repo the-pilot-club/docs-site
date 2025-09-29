@@ -232,6 +232,7 @@ paths:
       responses:
         '200':
           description: ''
+          $ref: '#/components/responses/StickyMessageGetResponse'
       tags:
         - Sticky
   /discord/sticky/new:
@@ -246,7 +247,7 @@ paths:
               $ref: '#/components/schemas/CreateStickyDto'
       responses:
         '201':
-          description: ''
+          description: 'A 201 status code will be sent with no data being sent'
       tags:
         - Sticky
   /discord/sticky/delete:
@@ -261,7 +262,7 @@ paths:
               $ref: '#/components/schemas/CreateStickyDto'
       responses:
         '204':
-          description: ''
+          description: 'Will send an empty response with a 204 status code'
       tags:
         - Sticky
   '/discord/leaderboard/users/find/{id}':
@@ -447,6 +448,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/StandardOutput'
+    StickyMessageGetResponse:
+      description: Get active sticky message
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/StickyDto'
   schemas:
     StandardOutput:
       type: opject
@@ -647,7 +656,19 @@ components:
         - slug
     CreateStickyDto:
       type: object
-      properties: { }
+      properties:
+        messageId:
+          type: string
+          example: 398557782623649794
+    StickyDto:
+      type: object
+      properties:
+        id:
+          type: string
+          example: fc6ecd04-0777-4b6f-867a-c2eb8a064fea
+        messageId:
+          type: string
+          example: 398557782623649794
     CreateUserDto:
       type: object
       properties: { }
